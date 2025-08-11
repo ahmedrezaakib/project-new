@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { Link,useLocation } from 'react-router'
+import { Link,useLocation } from 'react-router';
+import { useCart } from "react-use-cart";
 function Header(){
+
+  const { totalUniqueItems } = useCart();
+
     return(
     <header className="header_area">
       <div className="top_menu">
@@ -112,9 +116,10 @@ function Header(){
                     </li>
   
                     <li className="nav-item">
-                      <a href="#" className="icons">
+                      <Link to={'/cart'} className="icons">
+                        {totalUniqueItems} 
                         <i className="ti-shopping-cart"></i>
-                      </a>
+                      </Link>
                     </li>
   
                     <li className="nav-item">

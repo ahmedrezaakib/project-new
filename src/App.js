@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
-
+import { CartProvider, useCart } from "react-use-cart";
 
 import Contact from './pages/Contact';
 import Home from './pages/Home';
 import Shop_Category from './pages/Shop_Category';
 import Blog from './pages/Blog';
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./assets/css/style.css";
-import "./assets/vendors/linericon/style.css";
-import "./assets/css/font-awesome.min.css";
-import "./assets/css/themify-icons.css";
-import "./assets/css/flaticon.css";
-import "./assets/vendors/lightbox/simpleLightbox.css";
-import "./assets/vendors/nice-select/css/nice-select.css";
-import "./assets/vendors/animate-css/animate.css";
-import "./assets/css/responsive.css";
+import Cart from './pages/Cart';
+
 
 /* admin route */
 import Login from './Admin/Login';
 import Register from './Admin/Register';
 import Dashboard from './Admin/Dashboard';
 import Users from './Admin/Users';
-import Useradd from './Admin/Useradd';
-import Protected from './Admin/protected';
+import Protected from './components/protected';
+import Categories from './Admin/Categories';
+import Brand from './Admin/Brand';
+import Colour from './Admin/Colour';
+import Product from './Admin/Product';
 
 
 function App() {
@@ -35,30 +30,53 @@ function App() {
   });
 
   return (
-<> 
-<Routes>
-  <Route path='/' element={<Home/>}/>
-  <Route path='/Contact' element={<Contact/>}/>
-  <Route path='/Shop_Category' element={<Shop_Category/>}/> 
-  <Route path='/Blog' element={<Blog/>}/>
+          <> 
+            <CartProvider>
+              <Routes>
+                <Route path='/' element={<Home/>}/>
+                <Route path='/Contact' element={<Contact/>}/>
+                <Route path='/Shop_Category' element={<Shop_Category/>}/> 
+                <Route path='/Blog' element={<Blog/>}/>
+                <Route path='/cart' element={<Cart/>}/>
 
-  <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                
+                <Route path="/login" element={<Login />} />
+                {/* Admin route */}
+                <Route path= {"/admin/dashboard"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Dashboard /> 
+                  </Protected>
+                  } />
+                <Route path= {"/admin/user"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Users /> 
+                  </Protected>
+                  } />
+                <Route path= {"/admin/categories"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Categories /> 
+                  </Protected>
+                  } />
+                <Route path= {"/admin/brands"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Brand /> 
+                  </Protected>
+                  } />
+                <Route path= {"/admin/colour"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Colour /> 
+                  </Protected>
+                  } />
+                <Route path= {"/admin/product"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Product /> 
+                  </Protected>
+                  } />
 
-          {/* Admin route */}
-          <Route path= {"/admin/dashboard"} element={
-            <Protected  isSignedIn= {isSignedIn} >
-              <Dashboard /> 
-           </Protected>
-           } />
-          <Route path= {"/admin/user"} element={
-            <Protected  isSignedIn= {isSignedIn} >
-              <Users /> 
-           </Protected>
-           } />
-          <Route path="/admin/add-user" element={<Useradd />} />
-</Routes>
-</>
+              </Routes>
+            </CartProvider>
+          </>
   );
 }
 

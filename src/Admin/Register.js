@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from './component/axios';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
@@ -17,17 +17,14 @@ function Register() {
       contact_no:e.target.contact_no.value,
       password:e.target.password.value
     }
+    const formData = new FormData();
+    for (const property in datas) {
+      formData.append(property, datas[property])
+    }
    
     try{
       
-      let url='http://localhost/learner-api/users_add.php';
-      
-      let response= await axios({
-          method: 'post',
-          responsiveTYpe: 'json',
-          url: url,
-          data: datas
-      });
+      let response= await axios.post('register.php',formData);
       if(response.data.error==0)
         navigate('/login')
       else

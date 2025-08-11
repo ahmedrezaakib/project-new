@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from './component/axios';
 import { useNavigate } from 'react-router-dom';
+import { Link,useLocation } from 'react-router'
 function Login() {
   const navigate=useNavigate();
 
@@ -10,15 +11,13 @@ function Login() {
       email:e.target.email.value,
       password:e.target.password.value
     };
+    const formData = new FormData();
+    for (const property in datas) {
+      formData.append(property, datas[property])
+    }
+    
     try{
-      let url='http://localhost/learner-api/login.php';
-      
-      let response= await axios({
-          method: 'post',
-          responsiveTYpe: 'json',
-          url: url,
-          data: datas
-      });
+      let response= await axios.post('login.php',formData);
 
       if(response.data.jwt){
           /* if you want, user will be logged in until they logout*/
@@ -66,6 +65,7 @@ function Login() {
                       <input type="password" autocomplete="new-password" id="password" name="password" className="form-control" />
                     </div>
                   </div>
+                  <Link className="btn btn-link" to={"/register"}>Register</Link>
                   <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                     <button type="submit" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-lg">Login</button>
                   </div>

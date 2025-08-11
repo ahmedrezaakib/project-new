@@ -1,7 +1,30 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Weblayout from '../layout/Weblayout';
+import axios from '../Admin/component/axios';
+import { useCart } from "react-use-cart";
 
 function Home () {
+  const { addItem } = useCart();
+
+ const [featured,setFeatured]=useState([]);
+ const [newCome,setNewCome]=useState([]);
+ const [inspired,setInspired]=useState([]);
+useEffect(() => {
+    getProducts();
+  }, []);
+ const getProducts = async (e) => {
+     let feat = await axios.get(`front_api/products.php?query_type=featured&limit=5`)
+     setFeatured(feat.data);
+  
+     let newC = await axios.get(`front_api/products.php?query_type=new_product&limit=5`)
+     setNewCome(newC.data);
+   
+     let insp = await axios.get(`front_api/products.php?query_type=inspired&limit=5`)
+     setInspired(insp.data);
+   }
+
+   
+
   return (
   
 <Weblayout>
@@ -76,89 +99,40 @@ function Home () {
       </div>
 
       <div className="row">
-        <div className="col-lg-4 col-md-6">
-          <div className="single-product">
-            <div className="product-img">
-              <img className="img-fluid w-100" src="assets/img/product/feature-product/f-p-1.jpg" alt="" />
-              <div className="p_icon">
-                <a href="#">
-                  <i className="ti-eye"></i>
-                </a>
-                <a href="#">
-                  <i className="ti-heart"></i>
-                </a>
-                <a href="#">
-                  <i className="ti-shopping-cart"></i>
-                </a>
+      {
+        featured.length > 0 && featured.map((d, key) =>
+            <div className="col-lg-4 col-md-6">
+              <div className="single-product">
+                <div className="product-img">
+                  <img className="img-fluid w-100" src={`${process.env.REACT_APP_API_URL}${d.image}`} alt="" />
+                  <div className="p_icon">
+                    <a href="#">
+                      <i className="ti-eye"></i>
+                    </a>
+                    <a href="#">
+                      <i className="ti-heart"></i>
+                    </a>
+                    <button className='btn btn-link' onClick={() => addItem(d)}>
+                      <i className="ti-shopping-cart"></i>
+                    </button>
+                  </div>
+                </div>
+                <div className="product-btm">
+                  <a href="#" className="d-block">
+                    <h4>{d.name}</h4>
+                  </a>
+                  <div className="mt-3">
+                    <span className="mr-4">{d.price}</span>
+                    {/* <del>$35.00</del> */}
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="product-btm">
-              <a href="#" className="d-block">
-                <h4>Latest men’s sneaker</h4>
-              </a>
-              <div className="mt-3">
-                <span className="mr-4">$25.00</span>
-                <del>$35.00</del>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="col-lg-4 col-md-6">
-          <div className="single-product">
-            <div className="product-img">
-              <img className="img-fluid w-100" src="assets/img/product/feature-product/f-p-2.jpg" alt="" />
-              <div className="p_icon">
-                <a href="#">
-                  <i className="ti-eye"></i>
-                </a>
-                <a href="#">
-                  <i className="ti-heart"></i>
-                </a>
-                <a href="#">
-                  <i className="ti-shopping-cart"></i>
-                </a>
-              </div>
-            </div>
-            <div className="product-btm">
-              <a href="#" className="d-block">
-                <h4>Red women purses</h4>
-              </a>
-              <div className="mt-3">
-                <span className="mr-4">$25.00</span>
-                <del>$35.00</del>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-lg-4 col-md-6">
-          <div className="single-product">
-            <div className="product-img">
-              <img className="img-fluid w-100" src="assets/img/product/feature-product/f-p-3.jpg" alt="" />
-              <div className="p_icon">
-                <a href="#">
-                  <i className="ti-eye"></i>
-                </a>
-                <a href="#">
-                  <i className="ti-heart"></i>
-                </a>
-                <a href="#">
-                  <i className="ti-shopping-cart"></i>
-                </a>
-              </div>
-            </div>
-            <div className="product-btm">
-              <a href="#" className="d-block">
-                <h4>Men stylist Smart Watch</h4>
-              </a>
-              <div className="mt-3">
-                <span className="mr-4">$25.00</span>
-                <del>$35.00</del>
-              </div>
-            </div>
-          </div>
-        </div>
+        )
+      }
+        
+        
       </div>
     </div>
   </section>

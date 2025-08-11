@@ -4,11 +4,10 @@ import Adminlayout from '../layout/Adminlayout';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function Users() {
-  const [users,setUsers]=useState([]);
+function Colour() {
+  const [list,setList]=useState([]);
   const [show, setShow] = useState(false);
   const [inputs, setInputs] = useState([]);
-  const [selectedfile, setSelectedFile] = useState([]);
 
   const handleClose = () => {
     setShow(false)
@@ -16,10 +15,7 @@ function Users() {
   const handleShow = () => {
     setInputs({
             id:'',
-            name:'',
-            contact_no:'',
-            email:'',
-            password:''
+            name:''
         });
     setShow(true);
   }
@@ -29,30 +25,21 @@ function Users() {
   }, []);
 
   const getDatas = async (e) => {
-    let res = await axios.get(`users/list.php`)
-    setUsers(res.data);
-  }
-
-  const handelFile = (e) => {
-    setSelectedFile(e.target.files)
+    let res = await axios.get(`crud_common/list.php?table_name=colours`)
+    setList(res.data);
   }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
 
     let datas={
-        name:e.target.name.value,
-        contact_no:e.target.contact_no.value,
-        email:e.target.email.value,
-        password:e.target.password.value
+      table_name:'colours',
+      name:e.target.name.value
     }
     
     datas ={...inputs, ...datas} // marge two object
    
     const formData = new FormData();
-    for (let i = 0; i < selectedfile.length; i++) {
-      formData.append('files[]', selectedfile[i])
-    }
     for (const property in datas) {
       formData.append(property, datas[property])
     }
@@ -60,9 +47,9 @@ function Users() {
     try{
       let url='';
       if(datas.id!=''){
-        url=`users/update.php`;
+        url=`crud_common/update.php`;
       }else{
-        url=`users/add.php`;
+        url=`crud_common/add.php`;
       }
      
       let response= await axios.post(url,formData);
@@ -85,7 +72,7 @@ function Users() {
   }
 
   const deleteUser = async(id) => {
-    let res = await axios.get(`users/delete.php?id=${id}`);
+    let res = await axios.get(`users/delete.php?id=${id}&table_name=colours`);
     getDatas();
   }
 
@@ -93,7 +80,7 @@ function Users() {
   return (
     <Adminlayout>
       <div className='container'>
-        <h1>User</h1>
+        <h1>Colour</h1>
         
         <Button variant="primary" onClick={handleShow}>
           Add New
@@ -103,20 +90,14 @@ function Users() {
           <tr>
             <th>#SL</th>
             <th>Name</th>
-            <th>Contact</th>
-            <th>Email</th>
-            <th>Image</th>
             <th>Action</th>
           </tr>
           </thead>
           <tbody>
-          {users && users.map((d, key) =>
+          {list.length > 0 && list.map((d, key) =>
             <tr key={key}>
               <td className="text-bold-500">{key+1}</td>
               <td>{d.name}</td>
-              <td>{d.contact_no}</td>
-              <td>{d.email}</td>
-              <td><img src={`${process.env.REACT_APP_API_URL}${d.image}`} width="100px"/></td>
               <td>
                   <Button variant="primary" onClick={()=>{showEdit(d)}}>Edit</Button>
                   <Button variant="danger" onClick={()=>{deleteUser(d.id)}}>Delete</Button>
@@ -137,22 +118,6 @@ function Users() {
                   <label htmlFor='name'>Name</label>
                   <input type='text' defaultValue={inputs.name} className='form-control' name="name" id='name'/>
               </div>
-              <div className='form-group'>
-                  <label htmlFor='email'>Email</label>
-                  <input type='text' defaultValue={inputs.email} className='form-control' name="email" id='email'/>
-              </div>
-              <div className='form-group'>
-                  <label htmlFor='contact_no'>Contact</label>
-                  <input type='text' defaultValue={inputs.contact_no} className='form-control' name="contact_no" id='contact_no'/>
-              </div>
-              <div className='form-group'>
-                  <label htmlFor='image'>Photo</label>
-                  <input type='file' onChange={handelFile} className='form-control' name='image' id='image'/>
-              </div>
-              <div className='form-group'>
-                  <label htmlFor='password'>Password</label>
-                  <input type='text' className='form-control' name='password' id='password'/>
-              </div>
 
           </Modal.Body>
           <Modal.Footer>
@@ -170,4 +135,4 @@ function Users() {
 }
 
 
-export default Users;
+export default Colour;
