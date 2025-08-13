@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Shop_Category from './pages/Shop_Category';
 import Blog from './pages/Blog';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 
 /* admin route */
@@ -19,6 +20,8 @@ import Categories from './Admin/Categories';
 import Brand from './Admin/Brand';
 import Colour from './Admin/Colour';
 import Product from './Admin/Product';
+import Coupon from './Admin/Coupon';
+import Orders from './Admin/Orders';
 
 
 function App() {
@@ -38,6 +41,7 @@ function App() {
                 <Route path='/Shop_Category' element={<Shop_Category/>}/> 
                 <Route path='/Blog' element={<Blog/>}/>
                 <Route path='/cart' element={<Cart/>}/>
+                <Route path='/checkout' element={<Checkout/>}/>
 
                 <Route path="/register" element={<Register />} />
                 
@@ -71,6 +75,16 @@ function App() {
                 <Route path= {"/admin/product"} element={
                   <Protected  isSignedIn= {isSignedIn} >
                     <Product /> 
+                  </Protected>
+                  } />
+                <Route path= {"/admin/coupon"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Coupon /> 
+                  </Protected>
+                  } />
+                <Route path= {"/admin/orders"} element={
+                  <Protected  isSignedIn= {isSignedIn} >
+                    <Orders /> 
                   </Protected>
                   } />
 

@@ -4,28 +4,22 @@ import Adminlayout from '../layout/Adminlayout';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function Brand() {
+function Orders() {
   const [list,setList]=useState([]);
   const [show, setShow] = useState(false);
   const [inputs, setInputs] = useState([]);
-
+  const orderStatus=['pending','accepted','delivered','canceled'];
   const handleClose = () => {
     setShow(false)
   };
-  const handleShow = () => {
-    setInputs({
-            id:'',
-            name:''
-        });
-    setShow(true);
-  }
-
+  
   useEffect(() => {
     getDatas();
   }, []);
 
   const getDatas = async (e) => {
-    let res = await axios.get(`crud_common/list.php?table_name=brands`)
+    let res = await axios.get(`orders/list.php`)
+    
     setList(res.data);
   }
 
@@ -33,11 +27,10 @@ function Brand() {
     e.preventDefault();
 
     let datas={
-      table_name:'brands',
-      name:e.target.name.value
+      order_status:e.target.order_status.value,
+      delivery_date:e.target.delivery_date.value,
+      id:inputs.id
     }
-    
-    datas ={...inputs, ...datas} // marge two object
    
     const formData = new FormData();
     for (const property in datas) {
@@ -45,13 +38,8 @@ function Brand() {
     }
 
     try{
-      let url='';
-      if(datas.id!=''){
-        url=`crud_common/update.php`;
-      }else{
-        url=`crud_common/add.php`;
-      }
-     
+      let url=`orders/update.php`;
+      
       let response= await axios.post(url,formData);
      
       if(response.data.error == 1){
@@ -72,7 +60,7 @@ function Brand() {
   }
 
   const deleteUser = async(id) => {
-    let res = await axios.get(`crud_common/delete.php?id=${id}&table_name=brands`);
+    let res = await axios.get(`orders/delete.php?id=${id}`);
     getDatas();
   }
 
@@ -80,16 +68,18 @@ function Brand() {
   return (
     <Adminlayout>
       <div className='container'>
-        <h1>Brand</h1>
+        <h1>Orders</h1>
         
-        <Button variant="primary" onClick={handleShow}>
-          Add New
-        </Button>
         <table className='mt-5 table table-bordered'>
           <thead>
           <tr>
             <th>#SL</th>
-            <th>Name</th>
+            <th>Customer Name</th>
+            <th>Customer Contact</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Order Status</th>
+            <th>Delivery Date</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -97,7 +87,12 @@ function Brand() {
           {list.length > 0 && list.map((d, key) =>
             <tr key={key}>
               <td className="text-bold-500">{key+1}</td>
-              <td>{d.name}</td>
+              <td>{d.customer_name}</td>
+              <td>{d.customer_contact}</td>
+              <td>{d.order_date}</td>
+              <td>{d.grand_total}</td>
+              <td>{orderStatus[d.order_status]}</td>
+              <td>{d.delivery_date}</td>
               <td>
                   <Button variant="primary" onClick={()=>{showEdit(d)}}>Edit</Button>
                   <Button variant="danger" onClick={()=>{deleteUser(d.id)}}>Delete</Button>
@@ -107,7 +102,6 @@ function Brand() {
           </tbody>
         </table>
 
-
       <Modal show={show} onHide={handleClose}>
         <form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
@@ -115,10 +109,17 @@ function Brand() {
           </Modal.Header>
           <Modal.Body>
               <div className='form-group'>
-                  <label htmlFor='name'>Name</label>
-                  <input type='text' defaultValue={inputs.name} className='form-control' name="name" id='name'/>
+                  <label htmlFor='order_status'>Order Status</label>
+                  <select defaultValue={inputs.order_status} className='form-control' name="order_status" id='order_status'>
+                    {orderStatus.map((v,k) =>
+                    <option key={k} value={k}>{v}</option>
+                  )}
+                  </select>
               </div>
-
+              <div className='form-group'>
+                  <label htmlFor='delivery_date'>Delivery Date</label>
+                  <input type='date' defaultValue={inputs.delivery_date} className='form-control' name="delivery_date" id='delivery_date'/>
+              </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" type='submit'>
@@ -135,4 +136,4 @@ function Brand() {
 }
 
 
-export default Brand;
+export default Orders;

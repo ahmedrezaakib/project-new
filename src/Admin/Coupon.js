@@ -4,7 +4,7 @@ import Adminlayout from '../layout/Adminlayout';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function Brand() {
+function Coupon() {
   const [list,setList]=useState([]);
   const [show, setShow] = useState(false);
   const [inputs, setInputs] = useState([]);
@@ -15,7 +15,11 @@ function Brand() {
   const handleShow = () => {
     setInputs({
             id:'',
-            name:''
+            name:'',
+            code:'',
+            amount:'',
+            start_date:'',
+            finish_date:''
         });
     setShow(true);
   }
@@ -25,7 +29,7 @@ function Brand() {
   }, []);
 
   const getDatas = async (e) => {
-    let res = await axios.get(`crud_common/list.php?table_name=brands`)
+    let res = await axios.get(`coupon/list.php`)
     setList(res.data);
   }
 
@@ -33,8 +37,11 @@ function Brand() {
     e.preventDefault();
 
     let datas={
-      table_name:'brands',
-      name:e.target.name.value
+      name:e.target.name.value,
+      code:e.target.code.value,
+      amount:e.target.amount.value,
+      start_date:e.target.start_date.value,
+      finish_date:e.target.finish_date.value
     }
     
     datas ={...inputs, ...datas} // marge two object
@@ -47,9 +54,9 @@ function Brand() {
     try{
       let url='';
       if(datas.id!=''){
-        url=`crud_common/update.php`;
+        url=`coupon/update.php`;
       }else{
-        url=`crud_common/add.php`;
+        url=`coupon/add.php`;
       }
      
       let response= await axios.post(url,formData);
@@ -72,7 +79,7 @@ function Brand() {
   }
 
   const deleteUser = async(id) => {
-    let res = await axios.get(`crud_common/delete.php?id=${id}&table_name=brands`);
+    let res = await axios.get(`coupon/delete.php?id=${id}&table_name=categories`);
     getDatas();
   }
 
@@ -80,7 +87,7 @@ function Brand() {
   return (
     <Adminlayout>
       <div className='container'>
-        <h1>Brand</h1>
+        <h1>Coupon</h1>
         
         <Button variant="primary" onClick={handleShow}>
           Add New
@@ -90,6 +97,10 @@ function Brand() {
           <tr>
             <th>#SL</th>
             <th>Name</th>
+            <th>Code</th>
+            <th>Amount</th>
+            <th>Start Date</th>
+            <th>End Date</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -98,6 +109,10 @@ function Brand() {
             <tr key={key}>
               <td className="text-bold-500">{key+1}</td>
               <td>{d.name}</td>
+              <td>{d.code}</td>
+              <td>{d.amount}</td>
+              <td>{d.start_date}</td>
+              <td>{d.finish_date}</td>
               <td>
                   <Button variant="primary" onClick={()=>{showEdit(d)}}>Edit</Button>
                   <Button variant="danger" onClick={()=>{deleteUser(d.id)}}>Delete</Button>
@@ -118,6 +133,22 @@ function Brand() {
                   <label htmlFor='name'>Name</label>
                   <input type='text' defaultValue={inputs.name} className='form-control' name="name" id='name'/>
               </div>
+              <div className='form-group'>
+                  <label htmlFor='code'>Code</label>
+                  <input type='text' defaultValue={inputs.code} className='form-control' name="code" id='code'/>
+              </div>
+              <div className='form-group'>
+                  <label htmlFor='amount'>Amount (%)</label>
+                  <input type='text' defaultValue={inputs.amount} className='form-control' name="amount" id='amount'/>
+              </div>
+              <div className='form-group'>
+                  <label htmlFor='start_date'>Start Date</label>
+                  <input type='date' defaultValue={inputs.start_date} className='form-control' name="start_date" id='start_date'/>
+              </div>
+              <div className='form-group'>
+                  <label htmlFor='finish_date'>End Date</label>
+                  <input type='date' defaultValue={inputs.finish_date} className='form-control' name="finish_date" id='finish_date'/>
+              </div>
 
           </Modal.Body>
           <Modal.Footer>
@@ -135,4 +166,4 @@ function Brand() {
 }
 
 
-export default Brand;
+export default Coupon;

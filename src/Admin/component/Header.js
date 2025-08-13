@@ -36,6 +36,12 @@ function Header(){
                   <li className="nav-item">
                     <Link className="nav-link" to={"/admin/product"}>Product</Link>
                   </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to={"/admin/coupon"}>Coupon</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to={"/admin/orders"}>Orders</Link>
+                  </li>
                   
                 </ul>
                 <ul class="d-flex">

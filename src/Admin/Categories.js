@@ -72,7 +72,7 @@ function Categories() {
   }
 
   const deleteUser = async(id) => {
-    let res = await axios.get(`users/delete.php?id=${id}&table_name=categories`);
+    let res = await axios.get(`crud_common/delete.php?id=${id}&table_name=categories`);
     getDatas();
   }
 

@@ -72,7 +72,7 @@ function Colour() {
   }
 
   const deleteUser = async(id) => {
-    let res = await axios.get(`users/delete.php?id=${id}&table_name=colours`);
+    let res = await axios.get(`crud_common/delete.php?id=${id}&table_name=colours`);
     getDatas();
   }
 
